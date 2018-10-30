@@ -140,7 +140,6 @@ http://example.com/books?filter[title]=%php%&filter[authors.name]=hamid%
 Currently the following Finders are available via other bundles:
 
 - [mnugter/jsonapi-rql-finder-bundle][7] - [RQL][8] based Finder
-- [paknahad/query_parser][9] - More complex filtering
 
 #### Creating a custom Finder
 A Finder can be registered via a service tag in the services definition. The tag `paknahad.json_api.finder` must be
@@ -267,6 +266,5 @@ NOTICE: the "meta" field gets filled just on development environment.
 [6]: https://swagger.io/
 [7]: https://github.com/mnugter/jsonapi-rql-finder-bundle
 [8]: https://github.com/persvr/rql
-[9]: https://github.com/paknahad/query_parser
 [10]: http://jsonapi.org/recommendations/#filtering
 [11]: https://symfony.com/doc/current/security/voters.html
