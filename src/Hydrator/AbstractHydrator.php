@@ -21,13 +21,33 @@ abstract class AbstractHydrator extends BaseHydrator
         $this->action = $action;
     }
 
-    protected function filterAttributes(array $fields, $subject): array
+    abstract protected function getAvailableAttributes($entity): array;
+
+    abstract protected function getAvailableRelations($entity): array;
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getAttributeHydrator($entity): array
     {
-        return $this->voter->voteOnInputFields($this->action, $subject, $this->token, $fields);
+        return $this->voter->voteOnInputFields(
+            $this->action,
+            $entity,
+            $this->token,
+            $this->getAvailableAttributes($entity)
+        );
     }
 
-    protected function filterRelations(array $relations, $subject): array
+    /**
+     * {@inheritdoc}
+     */
+    protected function getRelationshipHydrator($entity): array
     {
-        return $this->voter->voteOnInputRelations($this->action, $subject, $this->token, $relations);
+        return $this->voter->voteOnInputRelations(
+            $this->action,
+            $entity,
+            $this->token,
+            $this->getAvailableRelations($entity)
+        );
     }
 }

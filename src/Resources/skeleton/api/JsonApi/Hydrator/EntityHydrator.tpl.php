@@ -90,9 +90,9 @@ class <?= $entity_class_name ?>Hydrator extends AbstractHydrator
     /**
      * {@inheritdoc}
      */
-    protected function getAttributeHydrator($<?= $entity_var_name ?>): array
+    protected function getAvailableAttributes($<?= $entity_var_name ?>): array
     {
-        $fields = [<?php
+        return [<?php
         foreach ($fields as $field) {
             if (isset($field['id']) && $field['id']) {
                 continue;
@@ -106,16 +106,14 @@ class <?= $entity_class_name ?>Hydrator extends AbstractHydrator
         ?>
 
         ];
-
-        return $this->filterAttributes($fields, $<?= $entity_var_name ?>);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function getRelationshipHydrator($<?= $entity_var_name ?>): array
+    protected function getAvailableRelations($<?= $entity_var_name ?>): array
     {
-        $relations = [<?php
+        return [<?php
     foreach ($associations as $association) {
         if (in_array($association['type'], $to_many_types)) {
             ?>
@@ -161,7 +159,5 @@ class <?= $entity_class_name ?>Hydrator extends AbstractHydrator
     ?>
 
         ];
-
-        return $this->filterRelations($relations, $<?= $entity_var_name ?>);
     }
 }

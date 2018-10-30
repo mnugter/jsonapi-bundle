@@ -16,13 +16,23 @@ abstract class AbstractResourceTransformer extends Base
         $this->token = $token;
     }
 
-    protected function filterAttributes(array $attributes, $entity): array
+    abstract protected function getAvailableAttributes($entity): array;
+
+    abstract protected function getAvailableRelations($entity): array;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAttributes($entity): array
     {
-        return $this->voter->voteOnOutputFields($entity, $this->token, $attributes);
+        return $this->voter->voteOnOutputFields($entity, $this->token, $this->getAvailableAttributes($entity));
     }
 
-    protected function filterRelations(array $relations, $entity): array
+    /**
+     * {@inheritdoc}
+     */
+    public function getRelationships($entity): array
     {
-        return $this->voter->voteOnOutputRelations($entity, $this->token, $relations);
+        return $this->voter->voteOnOutputRelations($entity, $this->token, $this->getAvailableRelations($entity));
     }
 }

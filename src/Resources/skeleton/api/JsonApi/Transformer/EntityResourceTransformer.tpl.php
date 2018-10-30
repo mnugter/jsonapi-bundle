@@ -59,9 +59,9 @@ class <?= $entity_class_name ?>ResourceTransformer extends AbstractResourceTrans
     /**
      * {@inheritdoc}
      */
-    public function getAttributes($<?= $entity_var_name ?>): array
+    public function getAvailableAttributes($<?= $entity_var_name ?>): array
     {
-        $fields = [<?php
+        return [<?php
         foreach ($fields as $field) {
             if (isset($field['id']) && $field['id']) {
                 continue;
@@ -75,8 +75,6 @@ class <?= $entity_class_name ?>ResourceTransformer extends AbstractResourceTrans
         ?>
 
         ];
-
-        return $this->filterAttributes($fields, $<?= $entity_var_name ?>);
     }
 
     /**
@@ -90,9 +88,9 @@ class <?= $entity_class_name ?>ResourceTransformer extends AbstractResourceTrans
     /**
      * {@inheritdoc}
      */
-    public function getRelationships($<?= $entity_var_name ?>): array
+    public function getAvailableRelations($<?= $entity_var_name ?>): array
     {
-        $relations = [<?php
+        return [<?php
     foreach ($associations as $association) {
         if (in_array($association['type'], $to_many_types)) {?>
 
@@ -110,7 +108,5 @@ class <?= $entity_class_name ?>ResourceTransformer extends AbstractResourceTrans
     }?>
 
         ];
-
-        return $this->filterRelations($relations, $<?= $entity_var_name ?>);
     }
 }
