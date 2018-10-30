@@ -43,4 +43,12 @@ abstract class AbstractVoter extends Voter
      * @return array
      */
     abstract public function voteOnOutputRelations($subject, TokenInterface $token, array $relations): array;
+
+    /**
+     * @param TokenInterface $token
+     * @param string         $fieldName
+     *
+     * @return bool
+     */
+    abstract public function voteOnFiltering(TokenInterface $token, string $fieldName): bool;
 }

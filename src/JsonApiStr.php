@@ -30,4 +30,16 @@ class JsonApiStr
             self::singularizeClassName($entityName) . '_id'
         );
     }
+
+    static public function genVoterName(string $entityName): string
+    {
+        return '\\App\\Security\\' . $entityName . 'Voter';
+    }
+
+    static public function getClassShortName(string $fullName): string
+    {
+        $explodedName = explode('\\', $fullName);
+
+        return end($explodedName);
+    }
 }

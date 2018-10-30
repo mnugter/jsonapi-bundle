@@ -2,6 +2,8 @@
 
 namespace Paknahad\JsonApiBundle\Helper\Filter\Filter;
 
+use Paknahad\JsonApiBundle\Helper\Filter\FinderInterface;
+
 /**
  * Class FinderHandler.
  */
@@ -24,5 +26,4 @@ class FinderHandler
     {
         $this->finders[] = $finder;
     }
-
 }

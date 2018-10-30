@@ -3,6 +3,8 @@ namespace Paknahad\JsonApiBundle\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityNotFoundException;
+use Paknahad\JsonApiBundle\JsonApiStr;
+use Paknahad\JsonApiBundle\Security\AbstractVoter;
 
 /**
  * Class FieldManager.
@@ -46,6 +48,11 @@ class FieldManager
      * @var EntityManager
      */
     protected $entityManager;
+
+    /**
+     * @var AbstractVoter[]
+     */
+    protected $voters = [];
 
     /**
      * Gets the EntityManager.
@@ -102,6 +109,18 @@ class FieldManager
     }
 
     /**
+     * Get the Voter of entity.
+     *
+     * @param string $entityName
+     *
+     * @return AbstractVoter|null
+     */
+    public function getVoter(string $entityName): ?AbstractVoter
+    {
+        return $this->voters[$entityName] ?? null;
+    }
+
+    /**
      * Add a field to the Fieldmanager.
      *
      * @param string $fieldName
@@ -123,7 +142,10 @@ class FieldManager
         $relation = $this->relations[$this->fields[$fieldName]['entity']];
         $this->fields[$fieldName]['relation_alias'] = $relation['alias'];
 
-        $this->fields[$fieldName]['metadata'] = $this->getFieldMetaData($this->fields[$fieldName]['entity'], $this->fields[$fieldName]['field']);
+        $this->fields[$fieldName]['metadata'] = $this->getFieldMetaData(
+            $this->fields[$fieldName]['entity'],
+            $this->fields[$fieldName]['field']
+        );
 
         return $this->fields[$fieldName];
     }
@@ -216,6 +238,8 @@ class FieldManager
         foreach ($entities as $entity) {
             $sourceEntity = $this->setRelation($entity, $sourceEntity);
         }
+
+        $this->setVoter($sourceEntity);
     }
 
     /**
@@ -249,5 +273,23 @@ class FieldManager
         ];
 
         return $this->relations[$entity]['entityClass'];
+    }
+
+    /**
+     * Set voter.
+     *
+     * @param string $entity
+     */
+    protected function setVoter(string $entity): void
+    {
+        if (isset($this->voters[$entity])) {
+            return;
+        }
+
+        $voterName = JsonApiStr::genVoterName(JsonApiStr::getClassShortName($entity));
+
+        if (class_exists($voterName)) {
+            $this->voters[$entity] = new $voterName();
+        }
     }
 }

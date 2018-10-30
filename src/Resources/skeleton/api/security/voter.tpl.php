@@ -137,4 +137,11 @@ foreach ($associations as $association) {
 
         return array_intersect_key($relations, array_flip($acceptableRelations));
     }
+
+    public function voteOnFiltering(TokenInterface $token, string $fieldName): bool
+    {
+        // logic to determine if the user can filter this field
+
+        return true;
+    }
 }

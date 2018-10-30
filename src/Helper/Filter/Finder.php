@@ -3,7 +3,10 @@ namespace Paknahad\JsonApiBundle\Helper\Filter;
 
 use Doctrine\ORM\QueryBuilder;
 use Paknahad\JsonApiBundle\Helper\FieldManager;
+use Paknahad\JsonApiBundle\Helper\InputOutputManager;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 /**
  * Class Finder
@@ -70,12 +73,33 @@ class Finder implements FinderInterface
     {
         $fieldMetaData = $this->fieldManager->addField($field);
 
+        $this->checkAuthority($fieldMetaData);
+
         $this->query->andWhere(sprintf(
             '%s %s %s',
             $this->fieldManager->getQueryFieldName($field),
             $this->getOperator($fieldMetaData, $value),
             $this->setValue($value)
         ));
+    }
+
+    /**
+     * Check user's authority for filtering this field
+     *
+     * @param array $metaData
+     *
+     * @throws UnauthorizedHttpException
+     */
+    protected function checkAuthority(array $metaData): void
+    {
+        $isAuthorized = InputOutputManager::checkFilteringAuthority(
+            $metaData['metadata']['fieldName'],
+            $this->fieldManager->getVoter($metaData['entity'])
+        );
+
+        if (! $isAuthorized) {
+            throw new AccessDeniedHttpException('You not authorized to filter this field: ' . $metaData['field']);
+        }
     }
 
     /**

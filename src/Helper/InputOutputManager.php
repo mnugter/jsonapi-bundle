@@ -3,6 +3,7 @@ namespace Paknahad\JsonApiBundle\Helper;
 
 use Doctrine\ORM\EntityManager;
 use Paknahad\JsonApiBundle\Hydrator\AbstractHydrator;
+use Paknahad\JsonApiBundle\JsonApiStr;
 use Paknahad\JsonApiBundle\ResourceTransformer\AbstractResourceTransformer;
 use Paknahad\JsonApiBundle\Security\AbstractVoter;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -28,10 +29,18 @@ class InputOutputManager
         return new $transformerClass(self::$token, self::makeVoter($transformerClass));
     }
 
+    public static function checkFilteringAuthority(string $fieldName, ?AbstractVoter $voter = null): bool
+    {
+        if (is_null($voter)) {
+            return true;
+        }
+
+        return $voter->voteOnFiltering(self::$token, $fieldName);
+    }
+
     protected static function makeVoter(string $fullClassName): ?AbstractVoter
     {
-        $explodedName = explode('\\', $fullClassName);
-        $className = end($explodedName);
+        $className = JsonApiStr::getClassShortName($fullClassName);
 
         if ($pos = strpos($className, 'Hydrator')) {
             $entity = substr($className, 0, $pos);
@@ -40,7 +49,7 @@ class InputOutputManager
         } else {
             return null;
         }
-        $voter = '\\App\\Security\\' . $entity . 'Voter';
+        $voter = JsonApiStr::genVoterName($entity);
 
         if (class_exists($voter)) {
             return new $voter();
