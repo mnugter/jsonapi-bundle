@@ -50,9 +50,8 @@ class ApiCrudTest extends MakerTestCase
                     $this->assertContains('created: src/JsonApi/Document/SweetFood/SweetFoodDocument.php', $output);
                     $this->assertContains('created: src/JsonApi/Document/SweetFood/SweetFoodsDocument.php', $output);
                     $this->assertContains('created: src/JsonApi/Transformer/SweetFoodResourceTransformer.php', $output);
-                    $this->assertContains('created: src/JsonApi/Hydrator/SweetFood/AbstractSweetFoodHydrator.php', $output);
-                    $this->assertContains('created: src/JsonApi/Hydrator/SweetFood/CreateSweetFoodHydrator.php', $output);
-                    $this->assertContains('created: src/JsonApi/Hydrator/SweetFood/UpdateSweetFoodHydrator.php', $output);
+                    $this->assertContains('created: src/JsonApi/Hydrator/SweetFoodHydrator.php', $output);
+                    $this->assertContains('created: src/Security/SweetFoodVoter.php', $output);
                     $this->assertContains('created: collections/postman.json', $output);
                     $this->assertContains('created: collections/swagger.yaml', $output);
                 })
